@@ -1,5 +1,6 @@
-import { User, Application } from "../models/index.js";
+import { User } from "../models/index.js";
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 
 // Get all users
 export const getUsers = async (_req: Request, res: Response) => {
@@ -28,7 +29,7 @@ export const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
-// create a new user
+// // create a new user
 export const createUser = async (req: Request, res: Response) => {
   try {
     const user = await User.create(req.body);
@@ -38,20 +39,48 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a user and associated apps
-export const deleteUser = async (req: Request, res: Response) => {
+// Update a user by their ID
+export const updateUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const user = await User.findOneAndDelete({ _id: req.params.userId });
+    const { userId } = req.params; // Extract the user ID from the request parameters
+    const updateData = req.body; // Extract fields to be updated from the request body
 
-    if (!user) {
-      return res.status(404).json({ message: "No user with that ID" });
+    // Validate userId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      res.status(400).send("Invalid user ID format");
+      return; // Ensure no further code executes
     }
 
-    await Application.deleteMany({ _id: { $in: user.applications } });
-    res.json({ message: "User and associated apps deleted!" });
-    return;
-  } catch (err) {
-    res.status(500).json(err);
-    return;
+    // Perform the update
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData }, // Only update the provided fields
+      { new: true, runValidators: true } // Return the updated document and validate input
+    );
+
+    // Handle case where user is not found
+    if (!updatedUser) {
+      res.status(404).send("User not found");
+      return; // Ensure no further code executes
+    }
+
+    res.status(200).json(updatedUser); // Send the updated user as a response
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+};
+
+// Delete a user by their ID
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const results = await User.deleteOne({ _id: req.params.userId });
+    console.log(results);
+  } catch (error) {
+    res.status(500).json({ error });
   }
 };

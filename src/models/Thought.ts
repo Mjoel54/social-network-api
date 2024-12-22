@@ -36,7 +36,6 @@ const ReactionSchema = new Schema<IReaction>(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp: Date) => timestamp.toISOString(),
     },
   },
   {
@@ -59,7 +58,7 @@ const ThoughtSchema = new Schema<IThought>(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp: Date) => timestamp.toISOString(),
+      get: (timestamp: Date) => timestamp,
     },
     username: {
       type: String,
