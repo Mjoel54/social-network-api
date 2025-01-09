@@ -1,9 +1,10 @@
 import { Schema, model, Document } from "mongoose";
+import { IThought } from "./Thought";
 
 interface IUser extends Document {
   username: string;
   email: string;
-  thoughts?: string;
+  thoughts?: IThought[];
   friends?: string;
 }
 
@@ -22,11 +23,12 @@ const userSchema = new Schema<IUser>(
       unique: true,
       match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
     },
-    thoughts: {
-      type: String,
-      trim: true,
-      required: false,
-    },
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Thought",
+      },
+    ],
     friends: {
       type: String,
       trim: true,

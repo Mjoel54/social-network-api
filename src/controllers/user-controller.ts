@@ -80,6 +80,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   try {
     const results = await User.deleteOne({ _id: req.params.userId });
     console.log(results);
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ error });
   }
