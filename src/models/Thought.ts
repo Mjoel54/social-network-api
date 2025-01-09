@@ -1,50 +1,50 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
 // Interface representing a Reaction document
-interface IReaction {
-  reactionId: Types.ObjectId;
-  reactionBody: string;
-  username: string;
-  createdAt: Date;
-}
+// interface IReaction {
+//   reactionId: Types.ObjectId;
+//   reactionBody: string;
+//   username: string;
+//   createdAt: Date;
+// }
 
 // Interface representing a Thought document
-interface IThought extends Document {
+export interface IThought extends Document {
   thoughtText: string;
   createdAt: Date;
   username: string;
-  reactions: IReaction[];
-  reactionCount: number;
+  // reactions: IReaction[];
+  // reactionCount: number;
 }
 
 // Reaction Schema
-const ReactionSchema = new Schema<IReaction>(
-  {
-    reactionId: {
-      type: Schema.Types.ObjectId,
-      default: () => new Types.ObjectId(),
-    },
-    reactionBody: {
-      type: String,
-      required: true,
-      maxlength: 280,
-    },
-    username: {
-      type: String,
-      required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    toJSON: {
-      getters: true, // Enable getters in JSON output
-    },
-    id: false, // Disable the virtual id field
-  }
-);
+// const ReactionSchema = new Schema<IReaction>(
+//   {
+//     reactionId: {
+//       type: Schema.Types.ObjectId,
+//       default: () => new Types.ObjectId(),
+//     },
+//     reactionBody: {
+//       type: String,
+//       required: true,
+//       maxlength: 280,
+//     },
+//     username: {
+//       type: String,
+//       required: true,
+//     },
+//     createdAt: {
+//       type: Date,
+//       default: Date.now,
+//     },
+//   },
+//   {
+//     toJSON: {
+//       getters: true, // Enable getters in JSON output
+//     },
+//     id: false, // Disable the virtual id field
+//   }
+// );
 
 // Thought Schema
 const ThoughtSchema = new Schema<IThought>(
@@ -64,7 +64,7 @@ const ThoughtSchema = new Schema<IThought>(
       type: String,
       required: true,
     },
-    reactions: [ReactionSchema],
+    // reactions: [ReactionSchema],
   },
   {
     toJSON: {
@@ -79,9 +79,9 @@ const ThoughtSchema = new Schema<IThought>(
 );
 
 // Virtual for reactionCount
-ThoughtSchema.virtual("reactionCount").get(function (this: IThought) {
-  return this.reactions.length;
-});
+// ThoughtSchema.virtual("reactionCount").get(function (this: IThought) {
+//   return this.reactions.length;
+// });
 
 // Create and export the Thought model
 const Thought = model<IThought>("Thought", ThoughtSchema);
