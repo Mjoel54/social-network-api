@@ -8,6 +8,11 @@ import {
   deleteThought,
 } from "../../controllers/thought-controller.js";
 
+import {
+  createReaction,
+  deleteReaction,
+} from "../../controllers/reaction-controller.js";
+
 // /api/users
 router.route("/").post(createThought).get(getAllThoughts);
 
@@ -18,5 +23,10 @@ router
   .get(getSingleThought)
   .put(updateThought)
   .delete(deleteThought);
+
+router
+  .route("/:thoughtId/reactions")
+  .post(createReaction)
+  .delete(deleteReaction);
 
 export default router;
