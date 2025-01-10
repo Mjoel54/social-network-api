@@ -1,6 +1,7 @@
 import { User } from "../models/index.js";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import Thought from "../models/Thought.js";
 
 // Get all users
 export const getUsers = async (_req: Request, res: Response) => {
@@ -78,10 +79,22 @@ export const updateUser = async (
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const results = await User.deleteOne({ _id: req.params.userId });
-    console.log(results);
-    res.status(200).json({ message: "User deleted successfully" });
+    const userId = req.params.userId;
+
+    // Delete the user
+    const userResult = await User.deleteOne({ _id: userId });
+
+    if (userResult.deletedCount === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete the user's associated thoughts
+    await Thought.deleteMany({ userId });
+
+    return res
+      .status(200)
+      .json({ message: "User and associated thoughts deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
