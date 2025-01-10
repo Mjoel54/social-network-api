@@ -1,0 +1,25 @@
+{
+  "name": "26-stu_mongoose-crud",
+  "version": "1.0.0",
+  "description": "Reverse engineer developer activity for CRUD methods in Mongoose",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npm run build && node dist/server.js",
+    "seed": "npm run build && node  dist/utils/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.96",
+    "typescript": "^5.5.4"
+  }
+}
